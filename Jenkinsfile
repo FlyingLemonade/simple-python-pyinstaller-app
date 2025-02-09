@@ -1,5 +1,9 @@
 pipeline {
-    agent none
+    agent {
+        docker {
+            image 'python:2-alpine'
+        }
+    }
     stages {
         stage('Build') {
             agent {
@@ -25,15 +29,21 @@ pipeline {
                     junit 'test-reports/results.xml'
                 }
             }
+	    input {
+		message 'Lanjut ke Deployment?'	    
+	    }
         }
-        stage('Deliver') {
+        stage('Deploy') {
             agent {
                 docker {
                     image 'cdrx/pyinstaller-linux:python2'
                 }
             }
             steps {
-                sh 'pyinstaller --onefile sources/add2vals.py'
+                sh 'pyinstaller --onefile sources/add2vals.py & echo $! > ./pidfile'
+		
+		sh 'sleep 60'
+		sh 'kill $(cat ./pidfile)'
             }
             post {
                 success {
@@ -43,3 +53,4 @@ pipeline {
         }
     }
 }
+
