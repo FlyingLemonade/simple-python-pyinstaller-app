@@ -13,14 +13,14 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh '/home/simple-python-pyinstaller-app/scripts/test.sh'
+                sh './scripts/test.sh'
             }
         }
         stage('Deploy') { 
             steps {
-                sh '/home/simple-python-pyinstaller-app/scripts/deliver.sh' 
+                sh './scripts/deliver.sh' 
                 input message: 'Sudah selesai menggunakan React App? (Klik "Proceed" untuk mengakhiri)' 
-                sh '/home/simple-python-pyinstaller-app/scripts/kill.sh' 
+                sh './scripts/kill.sh' 
             }
         }
     }
