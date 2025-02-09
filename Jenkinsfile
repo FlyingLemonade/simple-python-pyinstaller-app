@@ -1,31 +1,29 @@
 pipeline {
     agent {
         docker {
-            image 'node:16-buster-slim'
-            args '-p 3000:3000'
+            image 'python:3.9-slim'
+            args '-p 8000:8000'
         }
     }
     stages {
         stage('Build') {
             steps {
-                sh 'npm install'
+                sh 'pip install -r requirements.txt'
             }
         }
         stage('Test') {
             steps {
-                sh './scripts/test.sh'
+                sh 'pytest tests/'
+		input message: "Lanjut ke Deployment?"
             }
         }
         stage('Deploy') { 
             steps {
-                sh './scripts/deliver.sh' 
-                input message: 'Sudah selesai menggunakan React App? (Klik "Proceed" untuk mengakhiri)' 
-                sh './scripts/kill.sh' 
+                sh './scripts/deploy.sh'
+		sh 'sleep 60' 
+                sh './scripts/stop.sh' 
             }
         }
     }
 }
-
-
-
 
