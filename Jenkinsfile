@@ -8,22 +8,24 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-		sh 'cd ./sources'
-                sh 'python -m pip install pytest'
-		sh 'python -m build '
+                sh '''
+                cd ./sources
+                python -m pip install pytest
+                python -m build
+                '''
             }
         }
         stage('Test') {
             steps {
-                sh 'pytest '
-		input message: 'Lanjut ke Deploy?'
+                sh 'pytest ./sources'
+                input message: 'Lanjut ke Deploy?'
             }
         }
-        stage('Deploy') { 
+        stage('Deploy') {
             steps {
-                sh './scripts/deploy.sh' 
-                sh 'sleep 60' 
-                sh './scripts/stop.sh' 
+                sh './scripts/deploy.sh'
+                sh 'sleep 60'  
+                sh './scripts/stop.sh'
             }
         }
     }
