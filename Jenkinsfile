@@ -14,7 +14,9 @@ pipeline {
         stage('Test') {
             steps {
                 sh './jenkins/scripts/test.sh'
-		input_message: 'Lanjut ke Deployment'
+		input { 
+		   message: 'Lanjut ke Deployment'
+		}
             }
         }
         stage('Deploy') { 
