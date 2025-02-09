@@ -23,7 +23,7 @@ pipeline {
         }
         stage('Deploy') { 
             steps {
-                sh '/home/simple-python-pyinstaller-app' 
+                sh '/home/simple-python-pyinstaller-app/jenkins/scripts/deliver.sh' 
                 sh 'sleep 60' 
                 sh '/home/simple-python-pyinstaller-app/jenkins/scripts/kill.sh' 
             }
