@@ -13,17 +13,19 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh './jenkins/scripts/test.sh'
+                sh '/home/simple-python-pyinstaller-app/scripts/test.sh'
             }
         }
         stage('Deploy') { 
             steps {
-                sh './jenkins/scripts/deliver.sh' 
-                input message: 'Sudah selesai menggunakan React App? (Klik Proceed untuk mengakhiri)' 
-                sh './jenkins/scripts/kill.sh' 
+                sh '/home/simple-python-pyinstaller-app/scripts/deliver.sh' 
+                input message: 'Sudah selesai menggunakan React App? (Klik "Proceed" untuk mengakhiri)' 
+                sh '/home/simple-python-pyinstaller-app/scripts/kill.sh' 
             }
         }
     }
 }
+
+
 
 
