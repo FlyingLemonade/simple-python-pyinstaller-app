@@ -8,19 +8,18 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'pip install -r requirements.txt'
+                sh ''
             }
         }
         stage('Test') {
             steps {
                 sh 'pytest tests/'
-		input message: "Lanjut ke Deployment?"
             }
         }
         stage('Deploy') { 
             steps {
-                sh './scripts/deploy.sh'
-		sh 'sleep 60' 
+                sh './scripts/deploy.sh' 
+                input message: 'Sudah selesai menggunakan Python App? (Klik Proceed untuk mengakhiri)' 
                 sh './scripts/stop.sh' 
             }
         }
