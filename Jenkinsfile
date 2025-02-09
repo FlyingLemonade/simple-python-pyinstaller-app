@@ -12,7 +12,7 @@ pipeline {
                 cd ./sources
                 python -m venv venv
                 . venv/bin/activate
-                pip install pytest
+                pip install pytest build
                 python -m build
                 '''
             }
