@@ -1,56 +1,29 @@
 pipeline {
     agent {
         docker {
-            image 'python:2-alpine'
+            image 'node:16-buster-slim'
+            args '-p 3000:3000'
         }
     }
     stages {
         stage('Build') {
-            agent {
-                docker {
-                    image 'python:2-alpine'
-                }
-            }
             steps {
-                sh 'python -m py_compile sources/add2vals.py sources/calc.py'
+                sh 'npm install'
             }
         }
         stage('Test') {
-            agent {
-                docker {
-                    image 'qnib/pytest'
-                }
-            }
             steps {
-                sh 'py.test --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
+                sh './jenkins/scripts/test.sh'
             }
-            post {
-                always {
-                    junit 'test-reports/results.xml'
-                }
-            }
-	    input {
-		message 'Lanjut ke Deployment?'	    
-	    }
         }
-        stage('Deploy') {
-            agent {
-                docker {
-                    image 'cdrx/pyinstaller-linux:python2'
-                }
-            }
+        stage('Deploy') { 
             steps {
-                sh 'pyinstaller --onefile sources/add2vals.py & echo $! > ./pidfile'
-		
-		sh 'sleep 60'
-		sh 'kill $(cat ./pidfile)'
-            }
-            post {
-                success {
-                    archiveArtifacts 'dist/add2vals'
-                }
+                sh './jenkins/scripts/deliver.sh' 
+                input message: 'Sudah selesai menggunakan React App? (Klik Proceed untuk mengakhiri)' 
+                sh './jenkins/scripts/kill.sh' 
             }
         }
     }
 }
+
 
