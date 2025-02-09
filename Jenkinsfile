@@ -25,14 +25,17 @@ pipeline {
                 }
             }
         }
-        stage('Deliver') {
-            
+       stage('Deliver') {
             steps {
                 sh 'pip install pyinstaller'
-		sh 'pyinstaller --onefile sources/add2vals.py'
-            	sh 'sleep 60'
-		
-	    }
+                sh 'pyinstaller --onefile sources/add2vals.py'
+                sh 'mkdir -p ~/deployed_app'
+                sh 'cp dist/add2vals ~/deployed_app/'
+                sh 'chmod +x ~/deployed_app/add2vals'
+                sh 'nohup ~/deployed_app/add2vals &'
+                sh 'sleep 60'
+                sh 'pkill -f add2vals'
+            }
             post {
                 success {
                     archiveArtifacts 'dist/add2vals'
