@@ -15,7 +15,7 @@ pipeline {
             steps {
                 sh './jenkins/scripts/test.sh'
 		input { 
-		   message: 'Lanjut ke Deployment'
+		   message 'Lanjut ke Deployment'
 		}
             }
         }
