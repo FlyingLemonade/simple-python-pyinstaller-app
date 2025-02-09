@@ -13,7 +13,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh './jenkins/scripts/test.sh'
+                sh '/home/simple-python-pyinstaller-app/jenkins/scripts/test.sh'
 	    }		
             
 	    input { 
@@ -23,9 +23,9 @@ pipeline {
         }
         stage('Deploy') { 
             steps {
-                sh './jenkins/scripts/deliver.sh' 
+                sh '/home/simple-python-pyinstaller-app' 
                 sh 'sleep 60' 
-                sh './jenkins/scripts/kill.sh' 
+                sh '/home/simple-python-pyinstaller-app/jenkins/scripts/kill.sh' 
             }
         }
     }
