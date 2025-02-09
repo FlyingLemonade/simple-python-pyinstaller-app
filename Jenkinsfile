@@ -8,18 +8,21 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh ''
+		sh 'cd ./sources'
+                sh 'python -m pip install pytest'
+		sh 'python -m build '
             }
         }
         stage('Test') {
             steps {
-                sh 'pytest tests/'
+                sh 'pytest '
+		input message: 'Lanjut ke Deploy?'
             }
         }
         stage('Deploy') { 
             steps {
                 sh './scripts/deploy.sh' 
-                input message: 'Sudah selesai menggunakan Python App? (Klik Proceed untuk mengakhiri)' 
+                sh 'sleep 60' 
                 sh './scripts/stop.sh' 
             }
         }
