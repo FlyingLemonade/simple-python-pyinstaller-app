@@ -17,7 +17,7 @@ pipeline {
             steps {
                 sh 'pip install pytest'
 		sh 'py.test --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
-		input message : 'Lanjut ke tahap Deploy?'
+		
             }
             post {
                 always {
@@ -25,6 +25,11 @@ pipeline {
                 }
             }
         }
+	stage ('Manual Approve'){
+	    steps {
+		input message : 'Lanjut ke tahap Deploy?'	 
+	    }
+	}
        stage('Deliver') {
             steps {
                 sh 'pip install pyinstaller'
