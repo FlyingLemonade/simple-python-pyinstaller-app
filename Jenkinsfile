@@ -11,7 +11,7 @@ pipeline {
                 sh '''
                 cd ./sources
                 python -m venv venv
-                source venv/bin/activate
+                . venv/bin/activate
                 pip install pytest
                 python -m build
                 '''
@@ -21,7 +21,7 @@ pipeline {
             steps {
                 sh '''
                 cd ./sources
-                source venv/bin/activate
+                . venv/bin/activate
                 pytest
                 '''
                 input message: 'Lanjut ke Deploy?'
@@ -30,10 +30,11 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh './scripts/deploy.sh'
-                sh 'sleep 60' 
+                sh 'sleep 60'  // Consider replacing with a proper health check
                 sh './scripts/stop.sh'
             }
         }
     }
 }
+
 
