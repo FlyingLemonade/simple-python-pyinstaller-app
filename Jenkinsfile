@@ -1,40 +1,48 @@
 pipeline {
     agent {
-        docker {
-            image 'python:3.9-slim'
-            args '-p 8000:8000'
+	docker {
+            image 'python:3.9'
+            args '--user root'
         }
     }
     stages {
         stage('Build') {
+            agent {
+                docker {
+                    image 'python:2-alpine'
+                }
+            }
             steps {
-                sh '''
-                cd ./sources
-                python -m venv venv
-                . venv/bin/activate
-                pip install pytest build
-                python -m build
-                '''
+                sh 'python -m py_compile sources/add2vals.py sources/calc.py'
             }
         }
         stage('Test') {
+            
             steps {
-                sh '''
-                cd ./sources
-                . venv/bin/activate
-                pytest
-                '''
-                input message: 'Lanjut ke Deploy?'
+                sh 'pip install pytest'
+		sh 'py.test --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
+		input message : 'Lanjut ke tahap Deploy?'
+            }
+            post {
+                always {
+                    junit 'test-reports/results.xml'
+                }
             }
         }
-        stage('Deploy') {
+        stage('Deliver') {
+            
             steps {
-                sh './scripts/deploy.sh'
-                sh 'sleep 60'  // Consider replacing with a proper health check
-                sh './scripts/stop.sh'
+                sh 'pip install pyinstaller'
+		sh 'pyinstaller --onefile sources/add2vals.py'
+            	sh 'sleep 60'
+		
+	    }
+            post {
+                success {
+                    archiveArtifacts 'dist/add2vals'
+                }
             }
         }
     }
 }
-
 
